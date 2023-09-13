@@ -1,2 +1,5 @@
 # macos files in any folder
 .DS_Store
+
+# rsconnect folder
+rsconnect/

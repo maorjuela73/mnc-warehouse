@@ -1,10 +1,23 @@
-server <- function(input, output, session) {
+library(RSQLite)
+library(tidyverse)
+library(shiny)
+library(shinydashboard)
+library(stringi)
+library(reactable)
+library(jsonlite)
+
+# create a connection to the database called "mcn-relational.db"
+con <- dbConnect(RSQLite::SQLite(), "data/db/mnc-relational.db")
+
+areas_cualificacion <- dbReadTable(con, "areas_cualificacion")
+
+shinyServer(function(input, output, session) {
 
         # ValueBoxOutput to show number of uploaded files, data volume,
         # first upload date, last upload date
         output$num_files <- renderValueBox({
             valueBox(
-                value = length(list.files("../data/input/")),
+                value = length(list.files("data/input/")),
                 subtitle = "Número de archivos cargados",
                 icon = icon("upload")
             )
@@ -13,7 +26,7 @@ server <- function(input, output, session) {
         output$data_volume <- renderValueBox({
             valueBox(
                 value = paste(round(sum(file.info(
-                    list.files("../data/input/",
+                    list.files("data/input/",
                     all.files = TRUE,
                     recursive = TRUE,
                     full.names = TRUE))$size) / 1000000, 1), "MB"),
@@ -40,7 +53,7 @@ server <- function(input, output, session) {
 
         output$file_catalog <- renderReactable(
             file.info(
-                    list.files("../data/input/",
+                    list.files("data/input/",
                     all.files = TRUE,
                     recursive = TRUE,
                     full.names = TRUE),
@@ -138,4 +151,4 @@ server <- function(input, output, session) {
                 ) +
                 theme_minimal()
         })
-}
+})
