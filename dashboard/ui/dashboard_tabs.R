@@ -122,6 +122,7 @@ tab_consulta <- tabItem(
     ),
     fluidRow(
         column(12,
+            h3("Selección de Áreas de cualificación"),
             # Reactable with the catalog table
             reactableOutput("areas_catalog"),
             br(),
@@ -130,7 +131,44 @@ tab_consulta <- tabItem(
     ),
     fluidRow(
         column(12,
+            h3("Actividades económicas CIIU relacionadas"),
+        )
+    ),
+    fluidRow(
+        column(6,
+            # Reactable with the ciiu table
+            reactableOutput("tabla_ciiu")
+        ),
+        column(6,
             plotOutput("actividades_areas_plot")
+        )
+    ),
+    fluidRow(
+        column(12,
+            h3("Ocupaciones CUOC relacionadas"),
+        )
+    ),
+    fluidRow(
+        column(6,
+            # Reactable with the cuoc table
+            reactableOutput("tabla_cuoc")
+        ),
+        column(6,
+            plotOutput("ocupaciones_areas_plot")
+        )
+    ),
+    fluidRow(
+        column(12,
+            h3("Información CINE relacionada"),
+        )
+    ),
+    fluidRow(
+        column(6,
+            # Reactable with the cine table
+            reactableOutput("tabla_cine")
+        ),
+        column(6,
+            plotOutput("cine_areas_plot")
         )
     )
 )
