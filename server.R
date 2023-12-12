@@ -6,6 +6,9 @@ library(stringi)
 library(reactable)
 library(jsonlite)
 
+# load the kobo.R file
+source("kobo.R")
+
 # create a connection to the database called "mcn-relational.db"
 con <- dbConnect(RSQLite::SQLite(), "data/db/mnc-relational.db")
 
@@ -62,7 +65,9 @@ shinyServer(function(input, output, session) {
             as_tibble(rownames = NA) %>%
             rownames_to_column("filename") %>%
             select(filename, size, ctime) %>%
-            mutate(extension = stri_extract_last_regex(filename, "\\.\\w+$")) %>%
+            mutate(
+                extension = stri_extract_last_regex(filename, "\\.\\w+$")
+            ) %>%
             reactable(
                 columns = list(
                     filename = colDef(
@@ -297,7 +302,9 @@ shinyServer(function(input, output, session) {
                     y = "Número de actividades económicas (CIIU)"
                 ) +
                 # change the y max limit to the highest bar plus 10
-                scale_y_continuous(limits = c(0, max(data$actividades_economicas) + 10)) + 
+                scale_y_continuous(
+                    limits = c(0, max(data$actividades_economicas) + 10)
+                ) +
                 theme_minimal()
         })
 
@@ -335,7 +342,9 @@ shinyServer(function(input, output, session) {
                     y = "Número de denominaciones (CUOC)"
                 ) +
                 # change the y max limit to the highest bar plus 10
-                scale_y_continuous(limits = c(0, max(data$denominaciones) + 100)) + 
+                scale_y_continuous(
+                    limits = c(0, max(data$denominaciones) + 100)
+                ) +
                 theme_minimal()
         })
 
@@ -346,7 +355,8 @@ shinyServer(function(input, output, session) {
                 sprintf("'%s'", areas_cualificacion[selected, ]$codigo_area)
                 )
             sql_template <- "
-                SELECT codigo_area, COUNT(codigo_cine_2011_ac) AS campo_detallado
+                SELECT 
+                codigo_area, COUNT(codigo_cine_2011_ac) AS campo_detallado
                 FROM cine_actividades_areas
                 WHERE codigo_area IN (%s)
                 GROUP BY codigo_area;"
@@ -373,7 +383,51 @@ shinyServer(function(input, output, session) {
                     y = "Número de campos detallados (CINE)"
                 ) +
                 # change the y max limit to the highest bar plus 10
-                scale_y_continuous(limits = c(0, max(data$campo_detallado) + 3)) + 
+                scale_y_continuous(
+                    limits = c(0, max(data$campo_detallado) + 3)
+                ) +
                 theme_minimal()
         })
+
+        output$joined_table <- renderReactable(
+            dbGetQuery(
+                con, "
+                SELECT 
+                --ciiu.division,
+                --ciiu.grupo,
+                ciiu.clase,
+                ciiu.descripcion,
+                cine.codigo_area,
+                cine.area_cualificacion,
+                cine.codigo_cine_2011_ac,
+                cine.campos_detallado
+                FROM ciiu_actividades_areas ciiu
+                JOIN areas_cualificacion areas USING (codigo_area)
+                JOIN cine_actividades_areas cine USING (codigo_area)
+                WHERE ciiu.clase IS NOT NULL
+                ;"
+            ) %>%
+            as_tibble() %>%
+            select(input$general_variables) %>%
+            reactable(
+                bordered = TRUE,
+                highlight = TRUE,
+                filterable = TRUE, minRows = 10
+            )
+        )
+
+        output$survey_table <- renderReactable(
+            datos %>%
+            select(
+                c("cap_A/a1.4", "cap_A/a1.ub", "cap_A/a1.5",
+                  "cap_C/C1", "cap_C/C2", "cap_C/C3", "cap_C/C4",
+                  "cap_C/C3S1", "cap_C/C3_other",
+                  "cap_d/d2", "cap_d/d3", "cap_d/d4", "cap_d/d5", "cap_d/d6",
+                  "cap_d/d7", "cap_d/d71", "cap_d/d51", "cap_d/d61",
+                  "Misionales/B21", "Misionales/B21S1A", "Misionales/B21S1B")
+            ) %>%
+            reactable(
+                filterable = TRUE, minRows = 10
+            )
+        )
 })

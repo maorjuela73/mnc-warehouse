@@ -19,7 +19,9 @@ ui <- shinyUI(
                 tab_home,
                 tab_catalogo,
                 tab_carga,
-                tab_consulta
+                tab_consulta,
+                tab_infogeneral,
+                tab_survey
             )
         )
     )

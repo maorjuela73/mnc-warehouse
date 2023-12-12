@@ -1,4 +1,4 @@
-# Bodega de Datos del Marco Nacional de Cualificaciones MNC
+# Sistema de Gestión de Datos del Marco Nacional de Cualificaciones MNC
 ## Descripción
 La aplicación es una herramienta diseñada para centralizar y organizar de manera eficiente la información relacionada con las cualificaciones en un único sistema integrado. Esta solución simplifica el proceso de captura, almacenamiento y análisis de datos en cada etapa crucial, desde la caracterización inicial hasta el análisis de brechas de capital humano, el análisis funcional y, finalmente, las cualificaciones finales.
 ## Requisitos

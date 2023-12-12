@@ -3,3 +3,6 @@
 
 # rsconnect folder
 rsconnect/
+
+# environment variables
+.env

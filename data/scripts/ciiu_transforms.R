@@ -23,4 +23,4 @@ ciiu_divisiones <- ciiu_actividades_areas %>%
     filter(!is.na(division)) %>%
     select(-grupo, -clase)
 
-View(ciiu_divisiones)
+# View(ciiu_divisiones)

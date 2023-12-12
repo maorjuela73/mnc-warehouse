@@ -7,6 +7,16 @@ dashboard_sidebar <- dashboardSidebar(
         menuItem("Carga de archivos",
             tabName = "carga", icon = icon("upload")),
         menuItem("Consulta de datos",
-            tabName = "consulta", icon = icon("search"))
+            icon = icon("bar-chart"), startExpanded = TRUE,
+                menuSubItem(
+                    "Descriptivos por área",
+                    tabName = "infogeneral"),
+                menuSubItem(
+                    "Bases de datos de áreas",
+                    tabName = "consulta")
+        ),
+        menuItem("Encuesta",
+            tabName = "survey", icon = icon("question-circle")
+        )
     )
 )
